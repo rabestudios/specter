@@ -1,0 +1,37 @@
+[app/ui]
+version = 8.0.3
+modtime = 1588960904.629366000
+
+[app/launcher]
+version = 8.0.3
+modtime = 1588960904.631602000
+
+[views/crawler]
+owner = chris
+version = 8.0.3
+modtime = 1589382667.730111000
+
+[indexes/specter]
+owner = chris
+version = 8.0.3
+modtime = 1589378462.449671000
+
+[inputs/http%3A%2F%2Fspecter_token]
+access = read : [ admin ], write : [ admin ]
+export = none
+owner = chris
+version = 8.0.3
+modtime = 1589380144.409717000
+
+[app/package/check_for_updates]
+version = 8.0.3
+modtime = 1588960904.632899000
+
+[indexes/specter_data]
+owner = chris
+version = 8.0.3
+modtime = 1589378447.528623000
+
+[views/collection]
+version = 8.0.3
+modtime = 1589384098.679951000

@@ -1,0 +1,98 @@
+<form theme="dark">
+  <label>Crawler Performance</label>
+  <fieldset submitButton="false" autoRun="true">
+    <input type="time" token="time" searchWhenChanged="true">
+      <label>Time</label>
+      <default>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <title>Total Spider Executions</title>
+      <single>
+        <search>
+          <query>index="specter_logs"  
+| dedup url
+| stats count</query>
+          <earliest>$time.earliest$</earliest>
+          <latest>$time.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Success Rate</title>
+      <single>
+        <search>
+          <query>index="specter_logs"  
+| dedup id
+| stats count as total, count(eval(state="SUCCESS")) as success
+| eval percentage=case(total=0,0.00, 1==1, round((success/total) * 100, 2))
+| strcat percentage "%" success_rate
+| table success_rate</query>
+          <earliest>$time.earliest$</earliest>
+          <latest>$time.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Requests Over 24 Hours</title>
+      <chart>
+        <search>
+          <query>index="specter_logs"  
+| dedup url
+| timechart count as total by state span=1h</query>
+          <earliest>$time.earliest$</earliest>
+          <latest>$time.latest$</latest>
+        </search>
+        <option name="charting.axisTitleX.text">Time</option>
+        <option name="charting.axisTitleY.text">Total Requests</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="refresh.display">none</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Failure Causes</title>
+      <table>
+        <search>
+          <query>index="specter_logs"  
+| dedup id
+| search state="FAIL"
+| stats count by message</query>
+          <earliest>$time.earliest$</earliest>
+          <latest>$time.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+    <panel>
+      <title>Spider Executions</title>
+      <table>
+        <search>
+          <query>index="specter_logs"  
+| dedup id
+| stats count by name
+| rename count as "Executions", name as "Spider Function"</query>
+          <earliest>$time.earliest$</earliest>
+          <latest>$time.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+</form>

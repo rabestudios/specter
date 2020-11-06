@@ -1,0 +1,62 @@
+<form theme="dark">
+  <label>Data Collection</label>
+  <fieldset submitButton="false">
+    <input type="time" token="time">
+      <label></label>
+      <default>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <title>Data Collected</title>
+      <single>
+        <search>
+          <query>index="specter_data" 
+| dedup url
+| stats count</query>
+          <earliest>$time.earliest$</earliest>
+          <latest>$time.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="height">252</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Data Collected Over Time</title>
+      <chart>
+        <search>
+          <query>index="specter_data" 
+| dedup url 
+| timechart count span=1h</query>
+          <earliest>$time.earliest$</earliest>
+          <latest>$time.latest$</latest>
+        </search>
+        <option name="charting.axisTitleX.text">Time</option>
+        <option name="charting.axisTitleY.text">Data</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Collected Data</title>
+      <event>
+        <search>
+          <query>index="specter_data" 
+| dedup url</query>
+          <earliest>$time.earliest$</earliest>
+          <latest>$time.latest$</latest>
+        </search>
+        <option name="count">2</option>
+        <option name="list.drilldown">full</option>
+        <option name="refresh.display">progressbar</option>
+      </event>
+    </panel>
+  </row>
+</form>
